@@ -166,17 +166,17 @@ int split_file_load(char *f)
 		{
 			id.y = j;
 			//A splits.push_back(ID(i-1,j));
-			IDinsertArray(&splits,id);
+			IDInsertArray(&splits,id);
 		}
 		else
 			id.y = 0;
 		//A splits.push_back(ID(i-1,0));
-		IDinsertArray(&splits,id);
+		IDInsertArray(&splits,id);
 	}
 
 
 	//A sort(splits.array[0],splits.array[splits.used - 1]);
-	IDresizeArray(&splits,splits.used);
+	IDResizeArray(&splits,splits.used);
 	qsort(splits.array,splits.used,sizeof(ID),&compareIDs);
 
 	return binary_file;
@@ -213,14 +213,14 @@ int libsvm_load_data(char *filename)
 			{
 				v=lasvm_sparsevector_create();
 				//A X.push_back(v);	splitpos++;
-				sparsevectorinsertArray(&X,v);
+				sparsevectorInsertArray(&X,v);
 			}
 		}
 		else
 		{
 			v=lasvm_sparsevector_create();
 			//A X.push_back(v);
-			sparsevectorinsertArray(&X,v);
+			sparsevectorInsertArray(&X,v);
 		}
 		++msz;
 		//printf("%d\n",m);
@@ -333,7 +333,7 @@ int binary_load_data(char *filename)
 				mwrite=1;splitpos++;
 				v=lasvm_sparsevector_create();
 				//A X.push_back(v);
-				sparsevectorinsertArray(&X,v);
+				sparsevectorInsertArray(&X,v);
 			}
 		}
 		else
@@ -341,7 +341,7 @@ int binary_load_data(char *filename)
 			mwrite=1;
 			v=lasvm_sparsevector_create();
 			//A X.push_back(v);
-			sparsevectorinsertArray(&X,v);
+			sparsevectorInsertArray(&X,v);
 		}
 
 		if(nonsparse) // non-sparse binary file
@@ -372,8 +372,8 @@ int binary_load_data(char *filename)
 					intInsertArray(&Y,sz[0]);
 			}
 			//A val.resize(sz[1]);
-			floatresizeArray(&val,sz[1]);
-			intresizeArray(&ind,sz[1]);
+			floatResizeArray(&val,sz[1]);
+			intResizeArray(&ind,sz[1]);
 			fread((char*)(&ind.array[0]),sizeof(int),sz[1],fp);
 			fread((char*)(&val.array[0]),sizeof(float),sz[1],fp);
 			if(mwrite)
@@ -397,8 +397,8 @@ void load_data_file(char *filename)
 {
 	int msz,i,ft;
 	//A splits.resize(0);
-	IDfreeArray(&splits);
-	IDinitArray(&splits,1);
+	IDFreeArray(&splits);
+	IDInitArray(&splits,1);
 
 
 	int bin=binary_files;
@@ -434,7 +434,7 @@ void load_data_file(char *filename)
 	if(kernel_type==RBF)
 	{
 		//A x_square.resize(m+msz);
-		floatresizeArray(&x_square,m+msz);
+		floatResizeArray(&x_square,m+msz);
 		for(i=0;i<msz;i++)
 			x_square.array[i+m]=lasvm_sparsevector_dot_product(X.array[i+m],X.array[i+m]);
 	}
@@ -574,7 +574,7 @@ void finish(lasvm_t *sv)
 	int svind[l];
 	svs=lasvm_get_sv(sv,svind);
 	//A alpha.resize(m);
-	floatresizeArray(&alpha, m);
+	floatResizeArray(&alpha, m);
 	for(i=0;i<m;i++)
 		alpha.array[i]=0;
 	float svalpha[l];
@@ -597,7 +597,7 @@ void make_old(int val)
 	{
 		inew.array[ind]=inew.array[inew.used-1];
 		//A inew.pop_back();
-		intresizeArray(&inew, inew.used-1);
+		intResizeArray(&inew, inew.used-1);
 		//A iold.push_back(val);
 		intInsertArray(&iold,val);
 
@@ -654,7 +654,7 @@ int selectstrategy(lasvm_t *sv) // selection strategy
 	t=inew.array[s];
 	inew.array[s]=inew.array[inew.used-1];
 	//A inew.pop_back();
-	intresizeArray(&inew, inew.used-1);
+	intResizeArray(&inew, inew.used-1);
 	//A iold.push_back(t);
 	intInsertArray(&iold,t);
 
@@ -761,13 +761,13 @@ void train_online(char *model_file_name)
 						//fprintf(stdout, "[restoring before finish]"); fflush(stdout);
 						lasvm_init(sv, save_l, save_sv.array, save_alpha.array, save_g.array);
 						//A delete save_alpha; delete save_sv; delete save_g;
-						floatfreeArray(&save_alpha);
-						intfreeArray(&save_sv);
-						floatfreeArray(&save_g);
+						floatFreeArray(&save_alpha);
+						intFreeArray(&save_sv);
+						floatFreeArray(&save_g);
 					}
 					select_size.array[k]=select_size.array[select_size.used-1];
 					//A select_size.pop_back();
-					floatresizeArray(&select_size,select_size.used-1);
+					floatResizeArray(&select_size,select_size.used-1);
 				}
 			}
 			if(select_size.used==0) break; // early stopping, all intermediate models saved
@@ -777,8 +777,8 @@ void train_online(char *model_file_name)
         iold.resize(0); // start again for next epoch..
         for(i=0;i<m;i++)
         	inew.push_back(i); */
-		intfreeArray(&inew);
-		intfreeArray(&iold);
+		intFreeArray(&inew);
+		intFreeArray(&iold);
 		intInitArray(&iold,1);
 		intInitArray(&inew,1);
 		for(i=0;i<m;i++)
@@ -844,7 +844,7 @@ int main(void)
 	if(HAL_UART_Receive_IT(&UARTHandle1,(uint8_t *)aRxBuffer1,1) != HAL_OK)
 		error_Handler(UART_ERROR);
 
-	sparsevectorinitArray(&X,1);
+	sparsevectorInitArray(&X,1);
 
 	intInitArray(&Y,1);
 	intInitArray(&iold,1);
@@ -855,7 +855,7 @@ int main(void)
 	floatInitArray(&select_size,1);
 	floatInitArray(&x_square,1);
 
-	IDinitArray(&splits,1);
+	IDInitArray(&splits,1);
 
 	osThreadDef(main,mainThread,osPriorityNormal,0,100);
 	osThreadCreate(osThread(main),NULL);

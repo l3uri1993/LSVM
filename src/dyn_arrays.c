@@ -35,7 +35,7 @@ void intfreeArray(int_array_t *a) {
 	}
 }
 
-void intresizeArray(int_array_t *a, size_t newsize)
+void intResizeArray(int_array_t *a, size_t newsize)
 {
 	if(newsize >= a->size)
 	{}
@@ -54,15 +54,26 @@ void intresizeArray(int_array_t *a, size_t newsize)
 	}
 }
 
+int intPopFromArray(int_array_t *a)
+{
+	if(a->used == 0)
+		return 0;
+	else
+	{
+		int tmp = a->array[(a->used)-1];
+		a->used = a->used - 1;
+		return tmp;
+	}
+}
 
 
-void IDinitArray(ID_array_t *a, size_t initialSize) {
+void IDInitArray(ID_array_t *a, size_t initialSize) {
   a->array = (ID *)malloc(initialSize * sizeof(ID));
   a->used = 0;
   a->size = initialSize;
 }
 
-void IDinsertArray(ID_array_t *a, ID element) {
+void IDInsertArray(ID_array_t *a, ID element) {
   if (a->used == a->size) {
     a->size *= 2;
     a->array = (ID *)realloc(a->array, a->size * sizeof(ID));
@@ -70,7 +81,7 @@ void IDinsertArray(ID_array_t *a, ID element) {
   a->array[a->used++] = element;
 }
 
-void IDfreeArray(ID_array_t *a) {
+void IDFreeArray(ID_array_t *a) {
 	if(a->array != NULL)
 	{
 		free(a->array);
@@ -79,7 +90,7 @@ void IDfreeArray(ID_array_t *a) {
 	}
 }
 
-void IDresizeArray(ID_array_t *a, size_t newsize)
+void IDResizeArray(ID_array_t *a, size_t newsize)
 {
 	if(newsize >= a->size)
 	{}
@@ -95,6 +106,22 @@ void IDresizeArray(ID_array_t *a, size_t newsize)
 		a->array = tmp;
 		a->size = newsize;
 		a->used = newsize;
+	}
+}
+
+ID IDPopFromArray(ID_array_t *a)
+{
+	if(a->used == 0)
+	{
+		ID zero;
+		zero.x = zero.y = 0;
+		return zero;
+	}
+	else
+	{
+		ID tmp = a->array[(a->used)-1];
+		a->used = a->used - 1;
+		return tmp;
 	}
 }
 
@@ -114,7 +141,7 @@ void floatInsertArray(float_array_t *a, float element) {
   a->array[a->used++] = element;
 }
 
-void floatfreeArray(float_array_t *a) {
+void floatFreeArray(float_array_t *a) {
   if(a->array != NULL)
   {
 	  free(a->array);
@@ -123,7 +150,7 @@ void floatfreeArray(float_array_t *a) {
   }
 }
 
-void floatresizeArray(float_array_t *a, size_t newsize)
+void floatResizeArray(float_array_t *a, size_t newsize)
 {
 	if(newsize >= a->size)
 	{}
@@ -142,15 +169,28 @@ void floatresizeArray(float_array_t *a, size_t newsize)
 	}
 }
 
+float floatPopFromArray(float_array_t *a)
+{
+	if(a->used == 0)
+		return 0;
+	else
+	{
+		float tmp = a->array[(a->used)-1];
+		a->used = a->used - 1;
+		return tmp;
+	}
+}
 
 
-void sparsevectorinitArray(lasvm_sparsevector_array_t *a, size_t initialSize) {
+
+
+void sparsevectorInitArray(lasvm_sparsevector_array_t *a, size_t initialSize) {
   a->array = (lasvm_sparsevector_t* *)malloc(initialSize * sizeof(lasvm_sparsevector_t*));
   a->used = 0;
   a->size = initialSize;
 }
 
-void sparsevectorinsertArray(lasvm_sparsevector_array_t *a, lasvm_sparsevector_t* element) {
+void sparsevectorInsertArray(lasvm_sparsevector_array_t *a, lasvm_sparsevector_t* element) {
   if (a->used == a->size) {
     a->size *= 2;
     a->array = (lasvm_sparsevector_t* *)realloc(a->array, a->size * sizeof(lasvm_sparsevector_t*));
@@ -158,7 +198,7 @@ void sparsevectorinsertArray(lasvm_sparsevector_array_t *a, lasvm_sparsevector_t
   a->array[a->used++] = element;
 }
 
-void sparsevectorfreeArray(lasvm_sparsevector_array_t *a) {
+void sparsevectorFreeArray(lasvm_sparsevector_array_t *a) {
 	if(a->array != NULL)
 	{
 		free(a->array);
@@ -185,3 +225,17 @@ void sparsevectorResizeArray(lasvm_sparsevector_array_t *a, size_t newsize)
 		a->used = newsize;
 	}
 }
+
+
+lasvm_sparsevector_t* * sparsevectorPopFromArray(lasvm_sparsevector_array_t *a)
+{
+	if(a->used == 0)
+		return NULL;
+	else
+	{
+		lasvm_sparsevector_t* * tmp = a->array[(a->used)-1];
+		a->used = a->used - 1;
+		return tmp;
+	}
+}
+
