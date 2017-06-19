@@ -227,13 +227,13 @@ void sparsevectorResizeArray(lasvm_sparsevector_array_t *a, size_t newsize)
 }
 
 
-lasvm_sparsevector_t* * sparsevectorPopFromArray(lasvm_sparsevector_array_t *a)
+lasvm_sparsevector_t* sparsevectorPopFromArray(lasvm_sparsevector_array_t *a)
 {
 	if(a->used == 0)
 		return NULL;
 	else
 	{
-		lasvm_sparsevector_t* * tmp = a->array[(a->used)-1];
+		lasvm_sparsevector_t* tmp = a->array[(a->used)-1];
 		a->used = a->used - 1;
 		return tmp;
 	}

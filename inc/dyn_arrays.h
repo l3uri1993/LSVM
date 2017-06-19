@@ -77,7 +77,7 @@ void sparsevectorInsertArray(lasvm_sparsevector_array_t *a, lasvm_sparsevector_t
 void sparsevectorInitArray(lasvm_sparsevector_array_t *a, size_t initialSize);
 void sparsevectorFreeArray(lasvm_sparsevector_array_t *a);
 void sparsevectorResizeArray(lasvm_sparsevector_array_t *a, size_t newsize);
-lasvm_sparsevector_t* * sparsevectorPopFromArray(lasvm_sparsevector_array_t *a);
+lasvm_sparsevector_t* sparsevectorPopFromArray(lasvm_sparsevector_array_t *a);
 
 
 #endif /* DYN_ARRAYS_H_ */
