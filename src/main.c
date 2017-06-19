@@ -804,8 +804,11 @@ void train_online(char *model_file_name)
 
 void mainThread(void const *argument)
 {
+	printf("Incremental SVM algorithm on NUCLEO F401RE \r\n");
+
 	while(666)
 	{
+		/*
 		char *input_file_name = "data.txt";
 		char *model_file_name = "model.dat";
 
@@ -814,6 +817,8 @@ void mainThread(void const *argument)
 		train_online(model_file_name);
 
 		libsvm_save_model(model_file_name);
+
+		*/
 	}
 	osThreadTerminate(NULL);
 }
@@ -835,44 +840,9 @@ int main(void)
 	I2C1_Init();
 
 	select_USART(TERMINAL);
-	printf("Avvio completato - versione %d - revisione %.2f \r\n",1,1.02);
-
-	if(HAL_UART_Receive_IT(&UARTHandle2,(uint8_t *)aRxBuffer2,1) != HAL_OK)
-		error_Handler(UART_ERROR);
 
 	if(HAL_UART_Receive_IT(&UARTHandle1,(uint8_t *)aRxBuffer1,1) != HAL_OK)
 		error_Handler(UART_ERROR);
-
-	if(HTS221_WhoAmI() == HTS221_Who_Am_I_Val)
-	{
-		printf("\nComunicazione con HTS221 ok!!!\n");
-		HTS221_Config(0x1B, 0x83, 0x01, 0x00);
-		HTS221_ReadCalib();
-	}
-	else
-		error_Handler(I2C_ERROR);
-
-	if(LPS25HB_WhoAmI() == LPS25HB_Who_Am_I_Val)
-	{
-		printf("\nComunicazione con LSM6DS0 ok!!!\n");
-		LPS25HB_Config(0xB0, 0x00, 0x00, 0x00);
-	}
-	else
-		error_Handler(I2C_ERROR);
-
-	select_USART(TERMINAL);
-	printf("Wait for Wifi start....\r\n");
-	HAL_Delay(10000);
-	select_USART(WIFI);
-	printf("ssid=cognitive\n\n");
-	HAL_Delay(2000);
-	printf("passw=cognitive2015\n\n");
-	HAL_Delay(2000);
-	printf("WiFiConnect\n\n");
-	HAL_Delay(10000);
-
-	//float latitude = 44.403215;
-	//float longitude = 8.959599;
 
 	sparsevectorinitArray(&X,1);
 
@@ -892,21 +862,4 @@ int main(void)
 	osKernelStart();
 
 	while(666);
-
-	/*
-	while(666)
-	{
-
-		select_USART(TERMINAL);
-		printf("ADC %d, Humidity %.2f perc, Temperature %.2f deg, Pressure %.2f hPa,BtnState %d,"
-				"Latitude %.6f,Longitude %.6f\r\n",(uint16_t)HAL_ADC_GetValue(&AdcHandle),
-				HTS221_ReadHumidity(), HTS221_ReadTemperature(),LPS25HB_ReadPressure(),
-				BtnInt,latitude,longitude);
-		select_USART(WIFI);
-		printf("http://dweet.io/dweet/for/IOTcourse_b1_UNIGE?Temp=%.2f&Press=%.2f&Hum=%.2f&ADC=%d&BtnInt=%d&lat=%.4f&long=%.4f\n\n",
-				HTS221_ReadTemperature(),LPS25HB_ReadPressure(),HTS221_ReadHumidity(),
-				(uint16_t)HAL_ADC_GetValue(&AdcHandle),BtnInt,latitude,longitude);
-		HAL_Delay(1000);
-
-	}*/
 }
