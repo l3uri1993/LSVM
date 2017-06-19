@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "cmsis_os.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_nucleo.h"
 #include "gpio.h"
@@ -66,5 +67,31 @@ I2C_HandleTypeDef I2C1Handle;
 void error_Handler(int error);
 
 void SystemClock_Config(void);
+
+void mainThread(void const *argument);
+
+int split_file_load(char *f);
+
+int libsvm_load_data(char *filename);
+
+int binary_load_data(char *filename);
+
+void load_data_file(char *filename);
+
+int count_svs();
+
+int libsvm_save_model(const char *model_file_name);
+
+float kernel(int i, int j, void *kparam);
+
+void finish(lasvm_t *sv);
+
+void make_old(int val);
+
+int selectstrategy(lasvm_t *sv);
+
+void train_online(char *model_file_name);
+
+void mainThread(void const *argument);
 
 #endif
