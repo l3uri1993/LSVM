@@ -21,6 +21,7 @@
 #include "vector.h"
 #include "lasvm.h"
 
+
 #define LINEAR  0
 #define POLY    1
 #define RBF     2
