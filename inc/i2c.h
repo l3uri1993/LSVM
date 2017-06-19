@@ -14,5 +14,4 @@
 
 void I2C1_Init();
 
-
 #endif /* I2C_H_ */
