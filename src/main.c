@@ -806,7 +806,7 @@ void mainThread(void const *argument)
 {
 	printf("Incremental SVM algorithm on NUCLEO F401RE \r\n");
 
-	while(666)
+	while(1)
 	{
 		/*
 		char *input_file_name = "data.txt";
@@ -861,5 +861,5 @@ int main(void)
 	osThreadCreate(osThread(main),NULL);
 	osKernelStart();
 
-	while(666);
+	while(1);
 }
