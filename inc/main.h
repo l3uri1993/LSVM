@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include "cmsis_os.h"
+
 #include "stm32f4xx.h"
 #include "stm32f4xx_nucleo.h"
 #include "usart.h"
@@ -15,7 +16,6 @@
 #include "dyn_arrays.h"
 #include "vector.h"
 #include "lasvm.h"
-
 
 #define LINEAR  0
 #define POLY    1

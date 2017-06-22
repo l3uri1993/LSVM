@@ -798,14 +798,11 @@ void mainThread(void const *argument)
 {
 	printf("Incremental SVM algorithm on NUCLEO F401RE \r\n");
 
-	char *input_file_name = "data.trn";
-	char *model_file_name = "model.dat";
+	load_data_file("data.trn");
 
-	load_data_file(input_file_name);
+	train_online("model.dat");
 
-	train_online(model_file_name);
-
-	libsvm_save_model(model_file_name);
+	libsvm_save_model("model.dat");
 
 	osThreadTerminate(NULL);
 }
