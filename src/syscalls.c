@@ -217,3 +217,13 @@ int _execve(char *name, char **argv, char **env)
 	errno = ENOMEM;
 	return -1;
 }
+
+void *malloc (size_t size)
+{
+	return pvPortMalloc(size);
+}
+
+void free(void *ptr)
+{
+	vPortFree(ptr);
+}

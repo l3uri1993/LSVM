@@ -26,7 +26,7 @@ void intInsertArray(int_array_t *a, int element) {
   a->array[a->used++] = element;
 }
 
-void intfreeArray(int_array_t *a) {
+void intFreeArray(int_array_t *a) {
 	if(a->array != NULL)
 	{
 		free(a->array);

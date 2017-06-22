@@ -33,26 +33,9 @@ void SysTick_Handler(void)
 {
 	HAL_IncTick();
 	HAL_SYSTICK_IRQHandler();
-	if(debounce>0)
-		debounce--;
 #ifdef USE_RTOS_SYSTICK
 	osSystickHandler();
 #endif
-}
-
-void EXTI0_IRQHandler(void)
-{
-	if(debounce == 0)
-	{
-		debounce = 200;
-		if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_0)!= RESET)
-			HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-	}
-	else
-	{
-		if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_0)!= RESET)
-			__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_0);
-	}
 }
 
 void USART2_IRQHandler(void)
@@ -62,9 +45,4 @@ void USART2_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
 	HAL_UART_IRQHandler(&UARTHandle1);
-}
-
-void TIM4_IRQHandler(void)
-{
-	HAL_TIM_IRQHandler(&Tim4Handle);
 }

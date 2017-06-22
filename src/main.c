@@ -22,7 +22,7 @@
             "-T termination: set the type of early stopping strategy (default 0)\n"
             "	0 -- number of iterations \n"
             "	1 -- number of SVs \n"
-            "	2 -- time-based \n"
+            "	2 -- time-based (not implemented) \n"
             "-l sample: number of iterations/SVs/seconds to sample for early stopping (default all)\n"
             " if a list of numbers is given a model file is saved for each element of the set\n"
             "-C candidates : set number of candidates to search for selection strategy (default 50)\n"
@@ -30,7 +30,7 @@
             "-g gamma : set gamma in kernel function (default 1/k)\n"
             "-r coef0 : set coef0 in kernel function (default 0)\n"
             "-c cost : set the parameter C of C-SVC\n"
-            "-m cachesize : set cache memory size in MB (default 256)\n"
+            "-m cachesize : set cache memory size in KB (default 32)\n"
             "-wi weight: set the parameter C of class i to weight*C (default 1)\n"
             "-b bias: use a bias or not i.e. no constraint sum alpha_i y_i =0 (default 1=on)\n"
             "-e epsilon : set tolerance of termination criterion (default 0.001)\n"
@@ -38,15 +38,6 @@
             "-D deltamax : set tolerance for reprocess step, 1000=1 call to reprocess >1000=no calls to reprocess (default 1000)\n"
  */
 
-void *malloc (size_t size)
-{
-	return pvPortMalloc(size);
-}
-
-void free(void *ptr)
-{
-	vPortFree(ptr);
-}
 /* Data and model */
 const char *kernel_type_table[] = {"linear","polynomial","rbf","sigmoid"};
 int m=0;                          // training set size
@@ -58,11 +49,11 @@ float b0;                        // threshold
 
 /* Hyperparameters */
 int kernel_type=RBF;              // LINEAR, POLY, RBF or SIGMOID kernels
-float degree=3,kgamma=-1,coef0=0;// kernel params
+float degree=3,kgamma=0.005,coef0=0;// kernel params
 int use_b0=1;                     // use threshold via constraint \sum a_i y_i =0
 int selection_type=RANDOM;        // RANDOM, GRADIENT or MARGIN selection strategies
 int optimizer = ONLINE_WITH_FINISHING; // strategy of optimization
-float C=1;                       // C, penalty on errors
+float C=100;                       // C, penalty on errors
 float C_neg=1;                   // C-Weighting for negative examples
 float C_pos=1;                   // C-Weighting for positive examples
 int epochs=1;                     // epochs of online learning
@@ -76,7 +67,7 @@ int verbosity=1;                  // verbosity level, 0=off
 int saves=1;
 char report_file_name[1024];             // filename for the training report
 char split_file_name[1024]="\0";         // filename for the splits
-int cache_size=256;                       // 256Mb cache size as default
+int cache_size=32;                       // 32Kb cache size as default
 float epsgr=1e-3;                       // tolerance on gradients
 long long kcalcs=0;                      // number of kernel evaluations
 int binary_files=0;
@@ -604,8 +595,9 @@ void make_old(int val)
 	}
 }
 
-int selectstrategy(lasvm_t *sv) // selection strategy
+int selectstrategy(lasvm_t *sv)
 {
+	// selection strategy
 	int s=-1;
 	int t,i,r,j;
 	float tmp,best; int ind=-1;
@@ -672,7 +664,7 @@ void train_online(char *model_file_name)
 	strcat(t,".time");
 
 	lasvm_kcache_t *kcache=lasvm_kcache_create(kernel, NULL);
-	lasvm_kcache_set_maximum_size(kcache, cache_size*1024*1024);
+	lasvm_kcache_set_maximum_size(kcache, cache_size*1024);
 	lasvm_t *sv=lasvm_create(kcache,use_b0,C*C_pos,C*C_neg);
 	printf("set cache size %d\n",cache_size);
 
@@ -806,57 +798,42 @@ void mainThread(void const *argument)
 {
 	printf("Incremental SVM algorithm on NUCLEO F401RE \r\n");
 
-	while(1)
-	{
-		/*
-		char *input_file_name = "data.txt";
-		char *model_file_name = "model.dat";
+	char *input_file_name = "data.trn";
+	char *model_file_name = "model.dat";
 
-		load_data_file(input_file_name);
+	load_data_file(input_file_name);
 
-		train_online(model_file_name);
+	train_online(model_file_name);
 
-		libsvm_save_model(model_file_name);
+	libsvm_save_model(model_file_name);
 
-		*/
-	}
 	osThreadTerminate(NULL);
 }
 
 int main(void)
 {
-	debounce = 0;
-	BtnInt = 0;
-
 	HAL_Init();
 	SystemClock_Config();
-	GPIO_Init();
 	USART1_Init();
 	USART2_Init();
-	ADC1ch6_init();
-	TIM2_PWM_Init();
-	TIM4_Init();
-	HAL_ADC_Start(&AdcHandle);
-	I2C1_Init();
 
 	select_USART(TERMINAL);
 
 	if(HAL_UART_Receive_IT(&UARTHandle1,(uint8_t *)aRxBuffer1,1) != HAL_OK)
 		error_Handler(UART_ERROR);
 
+	//Struct arrays initialization
 	sparsevectorInitArray(&X,1);
-
 	intInitArray(&Y,1);
 	intInitArray(&iold,1);
 	intInitArray(&inew,1);
-
 	floatInitArray(&kparam,1);
 	floatInitArray(&alpha,1);
 	floatInitArray(&select_size,1);
 	floatInitArray(&x_square,1);
-
 	IDInitArray(&splits,1);
 
+	//RTOS Thread initialization
 	osThreadDef(main,mainThread,osPriorityNormal,0,100);
 	osThreadCreate(osThread(main),NULL);
 	osKernelStart();

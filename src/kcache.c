@@ -124,7 +124,7 @@ lasvm_kcache_create(lasvm_kernel_t kernelfunc, void *closure)
   self->func = kernelfunc;
   self->closure = closure;
   self->cursize = sizeof(lasvm_kcache_t);
-  self->maxsize = 256*1024*1024;
+  self->maxsize = 64*1024;
   self->qprev = (int*)xmalloc(sizeof(int));
   self->qnext = (int*)xmalloc(sizeof(int));
   self->rnext = self->qnext + 1;
