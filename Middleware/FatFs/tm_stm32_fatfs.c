@@ -78,12 +78,12 @@ FRESULT TM_FATFS_TruncateBeginning(FIL* fil, uint32_t index) {
 	
 		fr = f_lseek(fil, ReadIndex);						/* Go to the read index */
 		if (fr) return fr;									/* Check for success */
-		fr = f_read(fil, &Buffer, BlockSize, &Read);		/* Read data */
+		fr = f_read(fil, &Buffer, BlockSize, (UINT*)&Read);		/* Read data */
 		if (fr) return fr;									/* Check for success */
 
 		fr = f_lseek(fil, WriteIndex);						/* Go back to the write index */
 		if (fr) return fr;									/* Check for success */
-		fr = f_write(fil, &Buffer, BlockSize, &Written);    /* Write data */
+		fr = f_write(fil, &Buffer, BlockSize, (UINT*)&Written);    /* Write data */
 		if (fr) return fr;									/* Check for success */
 
 		TotalSize -= BlockSize;								/* Calculate new total size we have more to move everything */
