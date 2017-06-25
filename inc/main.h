@@ -13,6 +13,11 @@
 #include <ctype.h>
 #include <math.h>
 
+#include "defines.h"
+#include "tm_stm32_gpio.h"
+#include "tm_stm32_fatfs.h"
+#include "stdio.h"
+
 #include "dyn_arrays.h"
 #include "vector.h"
 #include "lasvm.h"
@@ -39,6 +44,12 @@
 #define HCLK 84000000
 #define WIFI 1
 #define TERMINAL 2
+
+FATFS FS;
+FIL fil;
+FRESULT fres;
+
+TM_FATFS_Size_t CardSize;
 
 uint8_t aRxBuffer2[1];
 uint8_t aRxBuffer1[1];

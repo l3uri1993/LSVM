@@ -798,6 +798,15 @@ void mainThread(void const *argument)
 {
 	printf("Incremental SVM algorithm on NUCLEO F401RE \r\n");
 
+	if (f_mount(&FS, "SD:", 1) == FR_OK) {
+	        /* Try to open file */
+	        if ((fres = f_open(&fil, "SD:data.trn", FA_OPEN_ALWAYS | FA_READ | FA_WRITE)) == FR_OK) {
+	            TM_FATFS_GetDriveSize("SD:", &CardSize);
+	            printf("%d \r\n",(int)CardSize.Total);
+	            f_close(&fil);
+	        }
+	    }
+/*
 	load_data_file("data.trn");
 
 	train_online("model.dat");
@@ -805,6 +814,7 @@ void mainThread(void const *argument)
 	libsvm_save_model("model.dat");
 
 	osThreadTerminate(NULL);
+*/
 }
 
 int main(void)

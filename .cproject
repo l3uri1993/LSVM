@@ -29,6 +29,7 @@
 								<option id="gnu.c.compiler.option.include.paths.1165102578" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../Middleware/FreeRTOS/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;../Middleware/FatFs&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../Middleware/FreeRTOS/CMSIS_RTOS&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;../Middleware/FreeRTOS/portable/GCC/ARM_CM4F&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Utilities}&quot;"/>
