@@ -796,16 +796,29 @@ void train_online(char *model_file_name)
 
 void mainThread(void const *argument)
 {
+	FATFS FS;
+	FIL fil;
+	FRESULT fres;
+
+	/* Size structure for FATFS */
+	TM_FATFS_Size_t CardSize;
+
 	printf("Incremental SVM algorithm on NUCLEO F401RE \r\n");
 
 	if (f_mount(&FS, "SD:", 1) == FR_OK) {
+        printf("mounted \r\n");
 	        /* Try to open file */
 	        if ((fres = f_open(&fil, "SD:data.trn", FA_OPEN_ALWAYS | FA_READ | FA_WRITE)) == FR_OK) {
 	            TM_FATFS_GetDriveSize("SD:", &CardSize);
 	            printf("%d \r\n",(int)CardSize.Total);
 	            f_close(&fil);
 	        }
+	        else
+	        	printf("File not found \r\n");
 	    }
+	else
+		printf("Mount failed \r\n");
+
 /*
 	load_data_file("data.trn");
 
