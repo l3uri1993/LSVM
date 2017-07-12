@@ -7,10 +7,12 @@
 
 #include "dyn_arrays.h"
 
+
 int compareIDs(const void* a, const void* b)
 {
   return ((ID *)a)->x < ((ID *)b)->x;
 }
+
 
 void intInitArray(int_array_t *a, size_t initialSize) {
   a->array = (int *)malloc(initialSize * sizeof(int));
@@ -50,7 +52,10 @@ void intResizeArray(int_array_t *a, size_t newsize)
 		free(a->array);
 		a->array = tmp;
 		a->size = newsize;
-		a->used = newsize;
+		if(newsize == 1)
+			a->used = 0;
+		else
+			a->used = newsize;
 	}
 }
 
@@ -62,6 +67,8 @@ int intPopFromArray(int_array_t *a)
 	{
 		int tmp = a->array[(a->used)-1];
 		a->used = a->used - 1;
+		if(a->used == a->size/2)
+			intResizeArray(a,a->size/2);
 		return tmp;
 	}
 }
@@ -93,7 +100,19 @@ void IDFreeArray(ID_array_t *a) {
 void IDResizeArray(ID_array_t *a, size_t newsize)
 {
 	if(newsize >= a->size)
-	{}
+	{
+		ID * tmp = (ID *)malloc(newsize * sizeof(ID));
+				int i;
+				for (i=0;i<newsize;i++)
+				{
+					tmp[i].x = 0;
+					tmp[i].y = 0;
+				}
+				free(a->array);
+				a->array = tmp;
+				a->size = newsize;
+				a->used = 0;
+	}
 	else
 	{
 		ID * tmp = (ID *)malloc(newsize * sizeof(ID));
@@ -105,7 +124,10 @@ void IDResizeArray(ID_array_t *a, size_t newsize)
 		free(a->array);
 		a->array = tmp;
 		a->size = newsize;
-		a->used = newsize;
+		if(newsize == 1)
+			a->used = 0;
+		else
+			a->used = newsize;
 	}
 }
 
@@ -121,10 +143,11 @@ ID IDPopFromArray(ID_array_t *a)
 	{
 		ID tmp = a->array[(a->used)-1];
 		a->used = a->used - 1;
+		if(a->used == a->size/2)
+			IDResizeArray(a,a->size/2);
 		return tmp;
 	}
 }
-
 
 
 void floatInitArray(float_array_t *a, size_t initialSize) {
@@ -153,7 +176,18 @@ void floatFreeArray(float_array_t *a) {
 void floatResizeArray(float_array_t *a, size_t newsize)
 {
 	if(newsize >= a->size)
-	{}
+	{
+		float * tmp = (float *)malloc(newsize * sizeof(float));
+				int i;
+				for (i=0;i<newsize;i++)
+				{
+					tmp[i] = 0;
+				}
+				free(a->array);
+				a->array = tmp;
+				a->size = newsize;
+				a->used = 0;
+	}
 	else
 	{
 		float * tmp = (float *)malloc(newsize * sizeof(float));
@@ -165,7 +199,10 @@ void floatResizeArray(float_array_t *a, size_t newsize)
 		free(a->array);
 		a->array = tmp;
 		a->size = newsize;
-		a->used = newsize;
+		if(newsize == 1)
+			a->used = 0;
+		else
+			a->used = newsize;
 	}
 }
 
@@ -177,11 +214,11 @@ float floatPopFromArray(float_array_t *a)
 	{
 		float tmp = a->array[(a->used)-1];
 		a->used = a->used - 1;
+		if(a->used == a->size/2)
+			floatResizeArray(a,a->size/2);
 		return tmp;
 	}
 }
-
-
 
 
 void sparsevectorInitArray(lasvm_sparsevector_array_t *a, size_t initialSize) {
@@ -222,10 +259,12 @@ void sparsevectorResizeArray(lasvm_sparsevector_array_t *a, size_t newsize)
 		free(a->array);
 		a->array = tmp;
 		a->size = newsize;
-		a->used = newsize;
+		if(newsize == 1)
+			a->used = 0;
+		else
+			a->used = newsize;
 	}
 }
-
 
 lasvm_sparsevector_t* sparsevectorPopFromArray(lasvm_sparsevector_array_t *a)
 {
@@ -235,6 +274,8 @@ lasvm_sparsevector_t* sparsevectorPopFromArray(lasvm_sparsevector_array_t *a)
 	{
 		lasvm_sparsevector_t* tmp = a->array[(a->used)-1];
 		a->used = a->used - 1;
+		if(a->used == a->size/2)
+			sparsevectorResizeArray(a,a->size/2);
 		return tmp;
 	}
 }
