@@ -18,7 +18,10 @@
  */
 #include "fatfs_sd_sdio.h"
 #include "stm32f4xx_hal_sd.h"
-#include "tm_stm32_gpio.h"
+
+#ifndef STM32F4xx
+#define STM32F4xx 333333
+#endif
 
 uint8_t SDCARD_IsDetected(void);
 
@@ -330,12 +333,12 @@ __weak void BSP_SD_MspInit(SD_HandleTypeDef *hsd, void *Params)
     HAL_DMA_Init(&dma_tx_handle); 
 
     /* NVIC configuration for DMA transfer complete interrupt */
-    HAL_NVIC_SetPriority(SD_DMAx_Rx_IRQn, 6, 0);
-    HAL_NVIC_EnableIRQ(SD_DMAx_Rx_IRQn);
-
-    /* NVIC configuration for DMA transfer complete interrupt */
     HAL_NVIC_SetPriority(SD_DMAx_Tx_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(SD_DMAx_Tx_IRQn);
+
+    /* NVIC configuration for DMA transfer complete interrupt */
+    HAL_NVIC_SetPriority(SD_DMAx_Rx_IRQn, 6, 0);
+    HAL_NVIC_EnableIRQ(SD_DMAx_Rx_IRQn);
 }
 
 /**
@@ -387,8 +390,11 @@ __weak void BSP_SD_MspDeInit(SD_HandleTypeDef *hsd, void *Params) {
   * @brief  Handles SD card interrupt request.
   * @retval None
   */
-
+#if defined(STM32F4xx)
 void SDIO_IRQHandler(void)
+#elif defined(STM32F7xx)
+void SDMMC1_IRQHandler(void)
+#endif
 {
   HAL_SD_IRQHandler(&uSdHandle);
 }
@@ -435,7 +441,8 @@ void BSP_SD_GetCardInfo(HAL_SD_CardInfoTypedef *CardInfo) {
 /*                  SDCARD WP AND DETECT                      */
 /**************************************************************/
 /* SDCARD detect function */
-uint8_t SDCARD_IsDetected(void) {
+uint8_t SDCARD_IsDetected(void)
+{
 	/* Card is detected */
 	return 1;
 }

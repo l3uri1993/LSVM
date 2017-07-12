@@ -61,6 +61,8 @@ extern C {
 \endverbatim
  */
 #include "stm32f4xx_hal.h"
+#include "tm_stm32_gpio.h"
+#include "defines.h"
 #include "diskio.h"
 
 /**
@@ -113,12 +115,12 @@ extern C {
 #define __DMAx_TxRx_CLK_ENABLE            __HAL_RCC_DMA2_CLK_ENABLE
 #define SD_DMAx_Tx_CHANNEL                DMA_CHANNEL_4
 #define SD_DMAx_Rx_CHANNEL                DMA_CHANNEL_4
-#define SD_DMAx_Tx_STREAM                 DMA2_Stream6  
-#define SD_DMAx_Rx_STREAM                 DMA2_Stream3  
+#define SD_DMAx_Tx_STREAM                 DMA2_Stream6
+#define SD_DMAx_Rx_STREAM                 DMA2_Stream3
 #define SD_DMAx_Tx_IRQn                   DMA2_Stream6_IRQn
 #define SD_DMAx_Rx_IRQn                   DMA2_Stream3_IRQn
-#define SD_DMAx_Tx_IRQHandler             DMA2_Stream6_IRQHandler   
-#define SD_DMAx_Rx_IRQHandler             DMA2_Stream3_IRQHandler 
+#define SD_DMAx_Tx_IRQHandler             DMA2_Stream6_IRQHandler
+#define SD_DMAx_Rx_IRQHandler             DMA2_Stream3_IRQHandler
 #define SD_DetectIRQHandler()             HAL_GPIO_EXTI_IRQHandler(SD_DETECT_PIN)
 /**
   * @}
